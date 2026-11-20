@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 140" role="img" aria-labelledby="mkTitle">
+  <title id="mkTitle">Школа №67 — знак</title>
+  <defs>
+    <linearGradient id="markGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3BC257"/>
+      <stop offset="1" stop-color="#0F7A2E"/>
+    </linearGradient>
+  </defs>
+  <path d="M64 0 120 18v52c0 30-26 50-56 64C34 120 8 100 8 70V18Z" fill="url(#markGrad)"/>
+  <path d="M64 9 112 24v45c0 25-21 43-48 55C37 112 16 94 16 69V24Z" fill="none" stroke="#A9CF38" stroke-width="3"/>
+  <text x="64" y="76" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="40" font-weight="900" fill="#ffffff">67</text>
+  <path d="M42 88h44" stroke="#A9CF38" stroke-width="4"/>
+</svg>

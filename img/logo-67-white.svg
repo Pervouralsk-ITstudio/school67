@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 150" role="img" aria-labelledby="wTitle">
+  <title id="wTitle">Школа №67 — белый вариант логотипа</title>
+  <g transform="translate(8,8)">
+    <path d="M64 0 120 18v52c0 30-26 50-56 64C34 120 8 100 8 70V18Z" fill="#ffffff" fill-opacity="0.14" stroke="#ffffff" stroke-width="3"/>
+    <path d="M64 9 112 24v45c0 25-21 43-48 55C37 112 16 94 16 69V24Z" fill="none" stroke="#A9CF38" stroke-width="3"/>
+    <text x="64" y="76" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="40" font-weight="900" fill="#ffffff">67</text>
+    <path d="M42 88h44" stroke="#A9CF38" stroke-width="4"/>
+  </g>
+  <text x="150" y="66" font-family="Arial Black, Arial, sans-serif" font-size="44" font-weight="900" fill="#ffffff" letter-spacing="-1">ШКОЛА №67</text>
+  <rect x="152" y="80" width="62" height="5" rx="2.5" fill="#A9CF38"/>
+  <text x="152" y="106" font-family="Verdana, Arial, sans-serif" font-size="11.5" fill="#DFF7E4" letter-spacing="1.3">ПЕРВОУРАЛЬСКАЯ БЕСПЛАТНАЯ</text>
+  <text x="152" y="124" font-family="Verdana, Arial, sans-serif" font-size="11.5" fill="#DFF7E4" letter-spacing="1.3">ЧАСТНАЯ ШКОЛА</text>
+</svg>
