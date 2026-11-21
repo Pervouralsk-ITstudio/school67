@@ -1023,7 +1023,7 @@ body.mod-on #addNews{display:inline-block}
           </div>
           <div class="field" style="justify-content:flex-end">
             <div class="quiz-actions" style="margin:0">
-              <button class="btn btn-sm" type="submit">Сохранить</button>
+              <button class="btn btn-sm" id="teacherSave" type="submit">Сохранить</button>
               <button class="btn btn-ghost btn-sm" id="tReset" type="button">Вернуть школьные</button>
             </div>
           </div>
@@ -2056,7 +2056,8 @@ body.mod-on #addNews{display:inline-block}
       fillTeacherForm(settingsState);
       setTeacherStatus("Сохраняю…");
 
-      fetch("api/settings", {
+      var canCloud = document.body.classList.contains("mod-on");
+      var serverSave = fetch("api/settings", {
         method: "POST",
         headers: { "Content-Type": "application/json", "X-Teacher-Code": $("#tCode").value.trim() },
         body: JSON.stringify(payload)
@@ -2064,20 +2065,26 @@ body.mod-on #addNews{display:inline-block}
         .then(function(response){
           return response.json().then(function(data){ return { ok: response.ok, data: data }; });
         })
-        .then(function(result){
-          if (result.ok && result.data.ok) {
-            applySettings(result.data.settings);
-            fillTeacherForm(settingsState);
-            setTeacherStatus("Сохранено на сервере — изменения увидят все посетители.", "ok");
-          } else if (result.data && result.data.error === "bad-code") {
-            setTeacherStatus("Неверный код учителя. Изменения сохранены только в этом браузере.", "warn");
-          } else {
-            setTeacherStatus("Сервер не принял изменения. Сохранено только в этом браузере.", "warn");
-          }
-        })
-        .catch(function(){
-          setTeacherStatus("Сервер недоступен — изменения сохранены только в этом браузере.", "warn");
-        });
+        .catch(function(){ return null; });
+
+      var cloudSet = canCloud ? cloudSave("settings", payload) : Promise.resolve(false);
+
+      Promise.all([serverSave, cloudSet]).then(function(results){
+        var server = results[0];
+        var cloudOk = results[1];
+
+        if (cloudOk) {
+          setTeacherStatus("Сохранено в базе школы — изменения увидят все.", "ok");
+        } else if (server && server.ok && server.data && server.data.ok) {
+          applySettings(server.data.settings);
+          fillTeacherForm(settingsState);
+          setTeacherStatus("Сохранено на сервере — изменения увидят все.", "ok");
+        } else if (!canCloud) {
+          setTeacherStatus("Сохранено в этом браузере. Чтобы сохранить для всех, войдите в режим модерации.", "warn");
+        } else {
+          setTeacherStatus("База не ответила — сохранено только в этом браузере.", "warn");
+        }
+      });
     });
 
     $("#tReset").addEventListener("click", function(){
@@ -2216,7 +2223,7 @@ body.mod-on #addNews{display:inline-block}
     var grid = $("#teachersGrid");
     if (grid && typeof saved.teachers === "string" && saved.teachers) grid.innerHTML = saved.teachers;
     var list = $("#newsList");
-    if (list && typeof saved.news === "string" && saved.news) {
+    if (list && typeof saved.news === "string") {
       list.innerHTML = modCleanHtml(saved.news);
       var empty = $("#newsEmpty");
       if (empty) empty.hidden = list.children.length > 0;
@@ -2273,7 +2280,7 @@ body.mod-on #addNews{display:inline-block}
       var grid = $("#teachersGrid");
       var list = $("#newsList");
       var newsHtml = list ? modCleanHtml(list.innerHTML) : "";
-      var ok = store.set(MOD_STORE, {
+      var contentPayload = {
         texts: texts,
         images: images,
         hrefs: hrefs,
@@ -2281,15 +2288,16 @@ body.mod-on #addNews{display:inline-block}
         teachers: grid ? modCleanHtml(grid.innerHTML) : "",
         news: newsHtml,
         savedAt: new Date().toISOString()
-      });
+      };
+      var ok = store.set(MOD_STORE, contentPayload);
       modStatus("Сохраняю в школу…");
       Promise.all([
-        cloudSave("news_html", { html: newsHtml }),
+        cloudSave("mod_content", contentPayload),
         cloudSave("grades", gradeOverrides)
       ]).then(function(results){
         var cloudOk = results[0] && results[1];
         if (cloudOk) {
-          modStatus("Сохранено: новости и оценки видны всем.");
+          modStatus("Сохранено в базе: правки, новости и оценки видны всем.");
         } else if (ok) {
           modStatus("Сохранено в браузере: база не ответила. Скачайте HTML для GitHub.");
         } else {
@@ -2368,7 +2376,7 @@ body.mod-on #addNews{display:inline-block}
     if (target.closest("#modBar, .lightbox, #gradeMenu")) return;
 
     if (target.closest(".mod-del")) return;
-    if (target.closest("#addNews, #addTeacher, #demoDiaryBtn, #prevWeek, #nextWeek, #closeDiary, #modEnter, #downloadLogo, #quizReset, #loadApplications, .mod-del")) return;
+    if (target.closest("#addNews, #addTeacher, #demoDiaryBtn, #prevWeek, #nextWeek, #closeDiary, #modEnter, #downloadLogo, #quizReset, #loadApplications, #teacherSave, .mod-del")) return;
 
     var img = target.closest("img");
     if (img) {
@@ -2518,12 +2526,13 @@ body.mod-on #addNews{display:inline-block}
             store.set(GRADE_KEY, gradeOverrides);
             if (diaryState.student && diaryBox && !diaryBox.hidden) renderDiary();
           }
-          if (row.key === "news_html" && row.value && typeof row.value.html === "string") {
-            var list = $("#newsList");
-            if (list) {
-              list.innerHTML = modCleanHtml(row.value.html);
-              updateNewsEmpty();
-            }
+          if (row.key === "settings" && row.value && typeof row.value === "object") {
+            applySettings(row.value);
+            fillTeacherForm(settingsState);
+          }
+          if (row.key === "mod_content" && row.value && typeof row.value === "object") {
+            store.set(MOD_STORE, row.value);
+            modApplySaved();
           }
         });
       })
