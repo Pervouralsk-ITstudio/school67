@@ -530,13 +530,73 @@ table.diary tbody td:first-child{width:46px;text-align:center;font-weight:700;co
   .quiz-q{padding:10px}
   .logo-card{padding:10px}
 }
+
+/* ---------- режим модерации ---------- */
+body.mod-on [contenteditable="true"]{
+  outline:2px dashed rgba(33,160,56,.55);outline-offset:2px;
+  background:rgba(169,207,56,.12);border-radius:3px;
+}
+body.mod-on [contenteditable="true"]:focus{outline:2px solid var(--g500);background:#fff}
+body.mod-on [contenteditable="true"]:empty::before{content:"Пустой текст";color:#9AA79E;font-style:italic}
+.mod-img{outline:3px dashed rgba(33,160,56,.7);outline-offset:2px;cursor:pointer}
+.mod-entry{border-top:1px dashed #D3E8D8;margin-top:16px;padding-top:12px}
+.mod-entry h3{font:700 12px/1.3 Verdana,sans-serif;color:#14402A;margin-bottom:5px}
+.mod-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.mod-row input{
+  flex:1 1 180px;padding:7px 9px;border:1px solid #A6CBB2;border-radius:5px;
+  font:12px Verdana,sans-serif;background:#fff;box-shadow:inset 0 1px 2px rgba(12,70,30,.1);
+}
+.mod-row input:focus{outline:none;border-color:var(--g500);box-shadow:0 0 0 3px rgba(33,160,56,.16)}
+.mod-bar{
+  position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:70;
+  display:flex;flex-wrap:wrap;align-items:center;gap:8px;
+  background:linear-gradient(#0F7A2E,#0B4B1E);color:#fff;
+  border:2px solid var(--lime);border-radius:10px;padding:9px 12px;
+  box-shadow:0 14px 30px rgba(0,0,0,.35);font:700 11px/1 Verdana,sans-serif;
+  max-width:calc(100% - 24px);
+}
+.mod-badge{
+  background:var(--lime);color:#123;padding:5px 8px;border-radius:4px;
+  font-size:10px;letter-spacing:.6px;text-transform:uppercase;
+}
+.mod-status{font:400 10.5px/1.3 Verdana,sans-serif;color:#DFF7E4;max-width:220px}
+.teacher{position:relative}
+.mod-del{
+  display:none;position:absolute;top:4px;right:4px;width:22px;height:22px;padding:0;
+  border-radius:50%;border:1px solid #E7A7A2;background:#FDF1F0;color:#B3261E;
+  font:700 13px/1 Verdana,sans-serif;cursor:pointer;z-index:2;
+}
+body.mod-on .mod-del{display:block}
+#addTeacher{display:none;margin-top:10px}
+body.mod-on #addTeacher{display:inline-block}
+#addNews{display:none;margin-top:10px}
+body.mod-on #addNews{display:inline-block}
+.grade-menu{
+  position:absolute;z-index:75;display:flex;gap:4px;align-items:center;
+  background:#fff;border:2px solid var(--g500);border-radius:8px;padding:6px;
+  box-shadow:0 10px 24px rgba(0,0,0,.22);
+}
+.grade-menu button{
+  width:30px;height:30px;border-radius:6px;border:1px solid #B4D7BC;
+  background:linear-gradient(#fff,#EAF6EC);color:#0F7A2E;
+  font:700 12px/1 Verdana,sans-serif;cursor:pointer;padding:0;
+}
+.grade-menu button:hover{background:var(--mint2)}
+.grade-menu .grade-clear{
+  width:auto;padding:0 8px;font-size:10px;text-transform:uppercase;letter-spacing:.4px;
+  border-color:#E7A7A2;color:#B3261E;background:#FDF1F0;
+}
+@media (max-width:640px){
+  .mod-bar{left:8px;right:8px;transform:none;bottom:8px;justify-content:center}
+  .mod-status{max-width:none;width:100%;text-align:center}
+}
 </style>
 </head>
 <body>
 
 <div class="topbar">
   <div class="wrap">
-    <span><b>ПБЧШ «Школа №67»</b> <span class="dot">·</span> Первоуральск, ул. Ватутина, 67</span>
+    <span><b>ПБЧШ «Школа №67»</b> <span class="dot">·</span> Первоуральск</span>
     <span id="todayDate">Сегодня</span>
     <span>Сайт обновлён: <b>20.11.2026</b></span>
   </div>
@@ -632,7 +692,7 @@ table.diary tbody td:first-child{width:46px;text-align:center;font-weight:700;co
     <section class="panel" id="about">
       <h2 class="panel-title">О школе</h2>
       <p class="lead">Мы называемся «бесплатной частной школой» — и это не ошибка в названии. Школа частная, потому что сама решает, чему и как учить. Бесплатная — потому что за обучение не платят родители: школу поддерживают выпускники и попечительский совет.</p>
-      <p>Здание на улице Ватутина, 67 — бывший дом пионеров, перестроенный в 2003 году. Внутри светло, на стенах зелёная краска, на подоконниках фикусы, в коридоре — аквариум. Мы считаем, что школа должна быть спокойным местом, куда хочется приходить.</p>
+      <p>Наше здание — бывший дом пионеров, перестроенный в 2003 году. Внутри светло, на стенах зелёная краска, на подоконниках фикусы, в коридоре — аквариум. Мы считаем, что школа должна быть спокойным местом, куда хочется приходить.</p>
       <div class="facts">
         <div class="fact"><b>1–11</b><small>классы</small></div>
         <div class="fact"><b>18</b><small>учеников в классе</small></div>
@@ -643,42 +703,15 @@ table.diary tbody td:first-child{width:46px;text-align:center;font-weight:700;co
 
     <section class="panel" id="news">
       <h2 class="panel-title">Новости школы</h2>
-      <ul class="news">
-        <li>
-          <time datetime="2026-11-18">18 ноя 2026</time>
-          <div>
-            <h3>Открыт набор в 1 класс на 2027/28 год <span class="tag">new</span></h3>
-            <p>Двадцать мест, заявления принимаем через форму на этом сайте. Собеседование — в форме разговора и небольшой игры.</p>
-          </div>
-        </li>
-        <li>
-          <time datetime="2026-11-12">12 ноя 2026</time>
-          <div>
-            <h3>Первое место в городской олимпиаде по математике</h3>
-            <p>Команда 8 «А» обошла 14 школ Первоуральска. Поздравляем ребят и преподавателя Петра Аркадьевича.</p>
-          </div>
-        </li>
-        <li>
-          <time datetime="2026-11-03">3 ноя 2026</time>
-          <div>
-            <h3>В школе заработала зимняя теплица</h3>
-            <p>Теперь биология проходит не только за партами: салат и лук выращиваем сами, а урожай идёт в столовую.</p>
-          </div>
-        </li>
-        <li>
-          <time datetime="2026-10-24">24 окт 2026</time>
-          <div>
-            <h3>День открытых дверей</h3>
-            <p>24 ноября в 17:00 ждём родителей будущих первоклассников: покажем классы, спортзал и библиотеку.</p>
-          </div>
-        </li>
-      </ul>
+      <p class="empty" id="newsEmpty">Новостей пока нет — их добавит учитель.</p>
+      <ul class="news" id="newsList"></ul>
+      <button class="btn btn-ghost btn-sm" id="addNews" type="button">+ Создать новость</button>
     </section>
 
     <section class="panel" id="gallery">
       <h2 class="panel-title">Фотогалерея</h2>
       <div class="gallery">
-        <button class="shot" type="button" data-full="img/school-building.jpg" data-caption="Главный вход школы №67, улица Ватутина">
+        <button class="shot" type="button" data-full="img/school-building.jpg" data-caption="Главный вход школы №67">
           <img src="img/school-building.jpg" width="900" height="675" alt="Фасад школы с зелёными панелями и клумбами">
           <figcaption><b>Главный вход.</b> Клумбы разбил 6 «Б» в мае.</figcaption>
         </button>
@@ -720,41 +753,23 @@ table.diary tbody td:first-child{width:46px;text-align:center;font-weight:700;co
 
     <section class="panel" id="teachers">
       <h2 class="panel-title">Наши педагоги</h2>
-      <div class="teachers">
-        <div class="teacher">
-          <div class="avatar" aria-hidden="true">ИС</div>
+      <div class="teachers" id="teachersGrid">
+        <div class="teacher own">
+          <button class="mod-del" type="button" aria-label="Удалить карточку педагога">×</button>
+          <div class="avatar" aria-hidden="true">ДВ</div>
           <div>
-            <h3>Ирина Соколова</h3>
-            <p>Директор, математика. В школе с 2003 года.</p>
-          </div>
-        </div>
-        <div class="teacher">
-          <div class="avatar" aria-hidden="true">ПМ</div>
-          <div>
-            <h3>Пётр Мельников</h3>
-            <p>Физика и робототехника. Ведёт кружок «Шестерёнка».</p>
-          </div>
-        </div>
-        <div class="teacher">
-          <div class="avatar" aria-hidden="true">АК</div>
-          <div>
-            <h3>Анна Ковалёва</h3>
-            <p>Русский язык и литература, школьный театр.</p>
+            <h3>Дмитрий Васенков, 10 лет</h3>
+            <p>Автор и создатель этого сайта, ученик 4 «Б». Придумал зелёный дизайн, меню и форму записи.</p>
           </div>
         </div>
       </div>
-      <div class="teacher own" style="margin-top:12px">
-        <div class="avatar" aria-hidden="true">ДВ</div>
-        <div>
-          <h3>Дмитрий Васенков, 10 лет</h3>
-          <p>Автор и создатель этого сайта, ученик 4 «Б». Придумал зелёный дизайн, меню и форму записи.</p>
-        </div>
-      </div>
+      <p class="empty" id="teachersEmpty">Педагоги появятся здесь, когда школа их добавит.</p>
+      <button class="btn btn-ghost btn-sm" id="addTeacher" type="button">+ Добавить педагога</button>
     </section>
 
     <section class="panel" id="signup">
       <h2 class="panel-title">Регистрация в школу</h2>
-      <p class="lead">Заполните заявку — она сохранится в браузере и появится в списке ниже. Это учебный сайт: данные никуда не отправляются и видны только на этом компьютере.</p>
+      <p class="lead">Заполните заявку — она уйдёт в школу и появится в списке ниже. Учитель увидит её в учительской.</p>
       <form id="signupForm" novalidate>
         <div class="form-grid">
           <div class="field">
@@ -983,7 +998,7 @@ table.diary tbody td:first-child{width:46px;text-align:center;font-weight:700;co
           </div>
           <div class="field">
             <label for="tTeacher">Классный руководитель</label>
-            <input id="tTeacher" name="tTeacher" type="text" maxlength="60" autocomplete="off" placeholder="Ирина Соколова">
+            <input id="tTeacher" name="tTeacher" type="text" maxlength="60" autocomplete="off" placeholder="Фамилия Имя Отчество">
             <span class="err"></span>
           </div>
           <div class="field">
@@ -1015,36 +1030,40 @@ table.diary tbody td:first-child{width:46px;text-align:center;font-weight:700;co
         </div>
       </form>
       <p class="hint" id="tStatus" role="status" aria-live="polite" style="margin-top:10px">Проверяю, есть ли сервер…</p>
+
+      <div class="mod-entry">
+        <h3>Режим модерации</h3>
+        <p class="hint">Введите код модератора: правятся все тексты, фотографии (клик по картинке), адреса ссылок (Ctrl+клик), заголовок вкладки и карточки педагогов. Код знает администратор школы.</p>
+        <div class="mod-row">
+          <input id="modCode" type="password" autocomplete="off" placeholder="код модератора" aria-label="Код модератора">
+          <button class="btn btn-sm" id="modEnter" type="button">Войти</button>
+        </div>
+        <p class="err" id="modErr" role="alert"></p>
+        <p class="hint">Код спрятан в исходнике страницы: это защита от случайных правок, а не от взлома.</p>
+      </div>
+
+      <div class="mod-entry">
+        <h3>Заявки на поступление</h3>
+        <p class="hint">Загружаются из базы школы. Список видят только те, кто знает код модератора.</p>
+        <button class="btn btn-ghost btn-sm" id="loadApplications" type="button">Загрузить заявки</button>
+        <ul class="reg-list" id="applicationsList" style="margin-top:10px"></ul>
+        <p class="hint" id="applicationsStatus" role="status" aria-live="polite"></p>
+      </div>
     </section>
 
     <section class="panel" id="contacts">
-      <h2 class="panel-title">Как нас найти</h2>
+      <h2 class="panel-title">Контакты</h2>
       <div class="contacts">
         <dl class="contact-list">
-          <div><dt>Адрес</dt><dd>623100, Свердловская область, г. Первоуральск, ул. Ватутина, 67</dd></div>
           <div><dt>Телефон</dt><dd><a id="contactPhone" href="tel:+73439676767">+7 (3439) 67-67-67</a></dd></div>
           <div><dt>Почта</dt><dd><a id="contactEmail" href="mailto:school67@pervouralsk.ru">school67@pervouralsk.ru</a></dd></div>
           <div><dt>Приёмная</dt><dd>Пн–Пт, 8:00–17:00. Обед 12:00–13:00.</dd></div>
-          <div><dt>Директор</dt><dd>Ирина Валерьевна Соколова</dd></div>
+          <div><dt>Директор</dt><dd>—</dd></div>
+          <div><dt>Где мы общаемся</dt><dd>Группа школы в MAX</dd></div>
         </dl>
-        <svg class="map" viewBox="0 0 320 190" role="img" aria-label="Схема расположения школы №67 на улице Ватутина">
-          <rect width="320" height="190" fill="#EDF7EF"/>
-          <path d="M0 128h320" stroke="#D9E9DC" stroke-width="22"/>
-          <path d="M0 128h320" stroke="#FFFFFF" stroke-width="2" stroke-dasharray="8 10"/>
-          <path d="M236 0v190" stroke="#D9E9DC" stroke-width="16"/>
-          <rect x="26" y="28" width="72" height="42" rx="3" fill="#D7EEDC" stroke="#B4D7BC"/>
-          <rect x="120" y="24" width="60" height="48" rx="3" fill="#D7EEDC" stroke="#B4D7BC"/>
-          <rect x="38" y="152" width="86" height="30" rx="3" fill="#D7EEDC" stroke="#B4D7BC"/>
-          <rect x="150" y="148" width="56" height="34" rx="3" fill="#D7EEDC" stroke="#B4D7BC"/>
-          <path d="M0 74h320" stroke="#C6E2CC" stroke-width="9"/>
-          <path d="M110 0v190" stroke="#C6E2CC" stroke-width="9"/>
-          <text x="60" y="54" text-anchor="middle" font-family="Verdana" font-size="8" fill="#6D8B76">двор</text>
-          <text x="150" y="53" text-anchor="middle" font-family="Verdana" font-size="8" fill="#6D8B76">стадион</text>
-          <text x="252" y="66" font-family="Verdana" font-size="8" fill="#6D8B76">ул. Ватутина</text>
-          <path d="M228 128l8-18 8 18z" fill="#0F7A2E" opacity=".25"/>
-          <circle cx="236" cy="128" r="9" fill="#21A038" stroke="#fff" stroke-width="3"/>
-          <text x="236" y="156" text-anchor="middle" font-family="Verdana" font-size="9" font-weight="bold" fill="#0F7A2E">Школа №67</text>
-        </svg>
+        <div class="contacts-note">
+          <p class="lead">Школа работает онлайн: все объявления, домашние задания и оценки — в группе школы в MAX. Адреса для визитов нет.</p>
+        </div>
       </div>
     </section>
 
@@ -1147,10 +1166,27 @@ table.diary tbody td:first-child{width:46px;text-align:center;font-weight:700;co
     </div>
     <div class="foot-bottom">
       <span>© 2003–2026 ПБЧШ «Школа №67». Учебный проект.</span>
-      <span>Г. Первоуральск, ул. Ватутина, 67 · +7 (3439) 67-67-67</span>
+      <span>Первоуральск · +7 (3439) 67-67-67</span>
     </div>
   </div>
 </footer>
+
+<div class="mod-bar" id="modBar" hidden>
+  <span class="mod-badge">Модерация</span>
+  <button class="btn btn-ghost btn-sm" id="modTitle" type="button">Заголовок вкладки</button>
+  <button class="btn btn-sm" id="modSave" type="button">Сохранить</button>
+  <button class="btn btn-ghost btn-sm" id="modDownload" type="button">Скачать HTML</button>
+  <button class="btn btn-ghost btn-sm" id="modExit" type="button">Выйти</button>
+  <span class="mod-status" id="modStatus" role="status" aria-live="polite"></span>
+</div>
+
+<div class="grade-menu" id="gradeMenu" hidden aria-label="Выставить оценку">
+  <button type="button" data-grade="5">5</button>
+  <button type="button" data-grade="4">4</button>
+  <button type="button" data-grade="3">3</button>
+  <button type="button" data-grade="2">2</button>
+  <button type="button" data-grade="0" class="grade-clear">убрать</button>
+</div>
 
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-labelledby="lbCap">
   <div class="lb-inner">
@@ -1181,6 +1217,37 @@ table.diary tbody td:first-child{width:46px;text-align:center;font-weight:700;co
   };
   var storageOK = store.set("__probe", 1);
   try { window.localStorage.removeItem("__probe"); } catch (e) {}
+
+  /* ---------- база школы (Supabase) ---------- */
+  var CLOUD = {
+    url: "https://tbskgaenhmbltesnmlfp.supabase.co",
+    key: "sb_publishable_gbAMJgpEQbeslxu1ixSl3g_dVqWOrR_"
+  };
+
+  function sbFetch(path, options){
+    options = options || {};
+    var headers = {
+      "apikey": CLOUD.key,
+      "Authorization": "Bearer " + CLOUD.key,
+      "Content-Type": "application/json"
+    };
+    if (options.headers) {
+      Object.keys(options.headers).forEach(function(name){ headers[name] = options.headers[name]; });
+    }
+    return fetch(CLOUD.url + path, {
+      method: options.method || "GET",
+      headers: headers,
+      body: options.body,
+      cache: "no-store"
+    });
+  }
+
+  function cloudSave(key, value){
+    return sbFetch("/rest/v1/rpc/school67_set", {
+      method: "POST",
+      body: JSON.stringify({ p_code: MOD_CODE, p_key: key, p_value: value })
+    }).then(function(response){ return response.ok; }).catch(function(){ return false; });
+  }
 
   /* дата */
   var dateEl = $("#todayDate");
@@ -1465,10 +1532,33 @@ table.diary tbody td:first-child{width:46px;text-align:center;font-weight:700;co
     regs.push(record);
     var saved = store.set(FORM_KEY, regs);
 
-    successBox.innerHTML = "<strong>Заявка № " + String(record.id).padStart(3, "0") + " принята!</strong>" +
-      record.name + " записан(а) в " + record.klass.toLowerCase() + ". Логин для кабинета: <b>" + record.login + "</b>. " +
-      (saved ? "Заявка сохранена в этом браузере." : "Браузер не разрешил сохранение — заявка живёт только до перезагрузки страницы.");
+    var head = "<strong>Заявка № " + String(record.id).padStart(3, "0") + " принята!</strong>" +
+      record.name + " записан(а) в " + record.klass.toLowerCase() + ". Логин для кабинета: <b>" + record.login + "</b>. ";
+    successBox.innerHTML = head + "Отправляю в школу…";
     successBox.hidden = false;
+
+    sbFetch("/rest/v1/applications", {
+      method: "POST",
+      headers: { "Prefer": "return=minimal" },
+      body: JSON.stringify({
+        name: record.name,
+        klass: record.klass,
+        birth: record.birth || null,
+        parent: record.parent,
+        phone: record.phone,
+        email: record.email,
+        comment: record.comment
+      })
+    })
+      .then(function(response){
+        if (!response.ok) throw new Error("http " + response.status);
+        successBox.innerHTML = head + "Заявка отправлена в школу — учитель увидит её в учительской.";
+      })
+      .catch(function(){
+        successBox.innerHTML = head + (saved
+          ? "Школа не ответила: заявка сохранена в этом браузере."
+          : "Школа не ответила, и браузер не разрешил сохранение.");
+      });
 
     renderRegs();
     form.reset();
@@ -1584,6 +1674,9 @@ table.diary tbody td:first-child{width:46px;text-align:center;font-weight:700;co
   var homeworkList = $("#homeworkList");
   var diaryStats = $("#diaryStats");
   var diaryState = { student: null, weekOffset: 0 };
+  var GRADE_KEY = "pbchsh_grades";
+  var gradeOverrides = store.get(GRADE_KEY, {});
+  if (!gradeOverrides || typeof gradeOverrides !== "object") gradeOverrides = {};
 
   var MONTHS = ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
 
@@ -1664,7 +1757,7 @@ table.diary tbody td:first-child{width:46px;text-align:center;font-weight:700;co
     var seedBase = st.name + "|" + st.klass + "|" + diaryState.weekOffset;
 
     dName.textContent = st.name;
-    dClass.textContent = st.klass + " · классный руководитель: " + getSetting("teacher", "Ирина Соколова");
+    dClass.textContent = st.klass + (getSetting("teacher", "") ? " · классный руководитель: " + getSetting("teacher", "") : " · классный руководитель не указан");
     weekLabel.textContent = rangeLabel(mondayOf(diaryState.weekOffset));
 
     var plan = [];
@@ -1692,7 +1785,11 @@ table.diary tbody td:first-child{width:46px;text-align:center;font-weight:700;co
         if (roll < 0.10) grade = 3;
         else if (roll < 0.40) grade = 4;
         else if (roll < 0.82) grade = 5;
-        rows += '<td><span class="diary-subject">' + subject + "</span>";
+        var gradeKey = st.name + "|" + st.klass + "|" + diaryState.weekOffset + "|" + d + "|" + row;
+        if (Object.prototype.hasOwnProperty.call(gradeOverrides, gradeKey)) {
+          grade = gradeOverrides[gradeKey] ? Number(gradeOverrides[gradeKey]) : null;
+        }
+        rows += '<td data-grade-key="' + gradeKey + '"><span class="diary-subject">' + subject + "</span>";
         if (grade) {
           grades.push(grade);
           rows += '<span class="grade g' + grade + '" aria-label="оценка ' + grade + '">' + grade + "</span>";
@@ -1860,7 +1957,7 @@ table.diary tbody td:first-child{width:46px;text-align:center;font-weight:700;co
   /* ---------- настройки школы и учительская ---------- */
   var SETTINGS_DEFAULTS = {
     className: "4 «Б»",
-    teacher: "Ирина Соколова",
+    teacher: "",
     phone: "+7 (3439) 67-67-67",
     email: "school67@pervouralsk.ru",
     motto: "Учимся бесплатно — растём честно"
@@ -1918,6 +2015,7 @@ table.diary tbody td:first-child{width:46px;text-align:center;font-weight:700;co
       .then(function(data){
         applySettings(data.settings);
         fillTeacherForm(settingsState);
+        if (typeof modApplySaved === "function") modApplySaved();
         if (data.updated) {
           var when = new Date(data.updated);
           setTeacherStatus("Настройки загружены с сервера. Последнее изменение: " + when.toLocaleString("ru-RU") + ".", "ok");
@@ -1928,6 +2026,7 @@ table.diary tbody td:first-child{width:46px;text-align:center;font-weight:700;co
       .catch(function(){
         applySettings(store.get(SETTINGS_KEY, {}));
         fillTeacherForm(settingsState);
+        if (typeof modApplySaved === "function") modApplySaved();
         setTeacherStatus("Сервер недоступен: изменения сохранятся только в этом браузере.", "warn");
       });
   }
@@ -1988,6 +2087,522 @@ table.diary tbody td:first-child{width:46px;text-align:center;font-weight:700;co
   }
 
   loadSettings();
+
+  /* ---------- режим модерации ---------- */
+  var MOD_CODE = "АБОБА67";
+  var MOD_STORE = "pbchsh_mod_content";
+  var MOD_SKIP = "#modBar, #modStatus, #modErr, #tStatus, #liErr, #pollNote, #successBox, #regCount, #weekLabel, #dName, #dClass, #diaryBody, #diaryStats, #quizQuestions, #quizResult, #regList, #pollBars, #todayDate, #visitDigits, #lbCap, #gradeMenu, .lightbox";
+
+  function modStatus(text){
+    var el = $("#modStatus");
+    if (el) el.textContent = text || "";
+  }
+
+  function modPath(el){
+    var parts = [];
+    var node = el;
+    while (node && node.parentElement && node !== document.body) {
+      var index = 1;
+      var sib = node;
+      while ((sib = sib.previousElementSibling)) index++;
+      parts.unshift(node.tagName + ":" + index);
+      node = node.parentElement;
+    }
+    return parts.join("/");
+  }
+
+  function modEditable(){
+    return $$("body *").filter(function(el){
+      var tag = el.tagName;
+      if (tag === "SCRIPT" || tag === "STYLE" || tag === "INPUT" || tag === "TEXTAREA" ||
+          tag === "SELECT" || tag === "OPTION" || tag === "BR" || tag === "IMG" ||
+          tag === "SVG" || tag === "PATH" || tag === "TEXT" || tag === "DEFS") return false;
+      if (el.children.length) return false;
+      if (!el.textContent.trim()) return false;
+      if (el.closest(MOD_SKIP)) return false;
+      return true;
+    });
+  }
+
+  function modSanitize(html){
+    var box = document.createElement("div");
+    box.innerHTML = String(html);
+    $$("script, style, iframe, object, embed, link, meta, form, input, button, select, textarea", box).forEach(function(node){
+      node.remove();
+    });
+    $$("*", box).forEach(function(el){
+      Array.prototype.slice.call(el.attributes).forEach(function(attr){
+        var name = attr.name.toLowerCase();
+        if (name.indexOf("on") === 0) el.removeAttribute(attr.name);
+        else if ((name === "href" || name === "src") && /^\s*javascript:/i.test(attr.value)) el.removeAttribute(attr.name);
+      });
+    });
+    return box.innerHTML;
+  }
+
+  function modCleanHtml(html){
+    var box = document.createElement("div");
+    box.innerHTML = String(html);
+    $$("[contenteditable], [spellcheck]", box).forEach(function(el){
+      el.removeAttribute("contenteditable");
+      el.removeAttribute("spellcheck");
+    });
+    $$(".mod-edit", box).forEach(function(el){ el.classList.remove("mod-edit"); });
+    return box.innerHTML;
+  }
+
+  function modSet(on){
+    document.body.classList.toggle("mod-on", on);
+    var bar = $("#modBar");
+    if (bar) bar.hidden = !on;
+    modEditable().forEach(function(el){
+      if (on) {
+        el.setAttribute("contenteditable", "true");
+        el.setAttribute("spellcheck", "false");
+        el.classList.add("mod-edit");
+      } else {
+        el.removeAttribute("contenteditable");
+        el.removeAttribute("spellcheck");
+        el.classList.remove("mod-edit");
+      }
+    });
+    $$("img").forEach(function(img){
+      if (img.closest("#modBar, .lightbox")) return;
+      img.classList.toggle("mod-img", on);
+    });
+    if (!on) {
+      var gm = $("#gradeMenu");
+      if (gm) gm.hidden = true;
+    }
+    if (on) modStatus("Правьте тексты кликом, фото — кликом по картинке, адрес ссылки — Ctrl+клик. Оценки — клик по клетке дневника.");
+  }
+
+  function modPickImage(img){
+    var picker = document.createElement("input");
+    picker.type = "file";
+    picker.accept = "image/*";
+    picker.style.display = "none";
+    document.body.appendChild(picker);
+    picker.addEventListener("change", function(){
+      var file = picker.files && picker.files[0];
+      if (!file) { picker.remove(); return; }
+      if (file.size > 3 * 1024 * 1024) {
+        modStatus("Файл больше 3 МБ — выберите картинку поменьше.");
+        picker.remove();
+        return;
+      }
+      var reader = new FileReader();
+      reader.onload = function(){
+        img.src = String(reader.result);
+        img.setAttribute("data-mod-img", "1");
+        modStatus("Фото заменено. Сохраните изменения или скачайте HTML.");
+        picker.remove();
+      };
+      reader.readAsDataURL(file);
+    });
+    picker.click();
+  }
+
+  function modEditHref(link){
+    var next = window.prompt("Новый адрес ссылки", link.getAttribute("href") || "");
+    if (next === null) return;
+    link.setAttribute("href", next.trim());
+    modStatus("Адрес ссылки изменён.");
+  }
+
+  function modApplySaved(){
+    var saved = store.get(MOD_STORE, null);
+    if (!saved) return;
+    var grid = $("#teachersGrid");
+    if (grid && typeof saved.teachers === "string" && saved.teachers) grid.innerHTML = saved.teachers;
+    var list = $("#newsList");
+    if (list && typeof saved.news === "string" && saved.news) {
+      list.innerHTML = modCleanHtml(saved.news);
+      var empty = $("#newsEmpty");
+      if (empty) empty.hidden = list.children.length > 0;
+    }
+    var index = {};
+    $$("body *").forEach(function(el){ index[modPath(el)] = el; });
+    var texts = saved.texts || {};
+    Object.keys(texts).forEach(function(path){
+      var el = index[path];
+      if (el && typeof texts[path] === "string") el.innerHTML = modSanitize(texts[path]);
+    });
+    var images = saved.images || {};
+    Object.keys(images).forEach(function(path){
+      var el = index[path];
+      if (el && el.tagName === "IMG" && typeof images[path] === "string") {
+        el.src = images[path];
+        el.setAttribute("data-mod-img", "1");
+      }
+    });
+    var hrefs = saved.hrefs || {};
+    Object.keys(hrefs).forEach(function(path){
+      var el = index[path];
+      if (el && el.tagName === "A" && typeof hrefs[path] === "string") el.setAttribute("href", hrefs[path]);
+    });
+    if (saved.title) document.title = saved.title;
+  }
+
+  var modCodeInput = $("#modCode");
+  if (modCodeInput && $("#modEnter")) {
+    $("#modEnter").addEventListener("click", function(){
+      var value = modCodeInput.value.trim().toUpperCase();
+      if (value !== MOD_CODE) {
+        $("#modErr").textContent = "Неверный код модератора.";
+        return;
+      }
+      $("#modErr").textContent = "";
+      modCodeInput.value = "";
+      modSet(true);
+      $("#teachersGrid").scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+    modCodeInput.addEventListener("keydown", function(e){
+      if (e.key === "Enter") { e.preventDefault(); $("#modEnter").click(); }
+    });
+  }
+
+  if ($("#modSave")) {
+    $("#modSave").addEventListener("click", function(){
+      var texts = {};
+      var images = {};
+      var hrefs = {};
+      modEditable().forEach(function(el){ texts[modPath(el)] = modCleanHtml(el.innerHTML); });
+      $$("img[data-mod-img]").forEach(function(img){ images[modPath(img)] = img.src; });
+      $$("a[href]").forEach(function(a){ hrefs[modPath(a)] = a.getAttribute("href"); });
+      var grid = $("#teachersGrid");
+      var list = $("#newsList");
+      var newsHtml = list ? modCleanHtml(list.innerHTML) : "";
+      var ok = store.set(MOD_STORE, {
+        texts: texts,
+        images: images,
+        hrefs: hrefs,
+        title: document.title,
+        teachers: grid ? modCleanHtml(grid.innerHTML) : "",
+        news: newsHtml,
+        savedAt: new Date().toISOString()
+      });
+      modStatus("Сохраняю в школу…");
+      Promise.all([
+        cloudSave("news_html", { html: newsHtml }),
+        cloudSave("grades", gradeOverrides)
+      ]).then(function(results){
+        var cloudOk = results[0] && results[1];
+        if (cloudOk) {
+          modStatus("Сохранено: новости и оценки видны всем.");
+        } else if (ok) {
+          modStatus("Сохранено в браузере: база не ответила. Скачайте HTML для GitHub.");
+        } else {
+          modStatus("Браузер запретил сохранение — скачайте HTML.");
+        }
+      });
+    });
+  }
+
+  if ($("#modTitle")) {
+    $("#modTitle").addEventListener("click", function(){
+      var next = window.prompt("Новый заголовок вкладки браузера", document.title);
+      if (next === null) return;
+      document.title = next.trim() || document.title;
+      modStatus("Заголовок вкладки изменён.");
+    });
+  }
+
+  if ($("#modDownload")) {
+    $("#modDownload").addEventListener("click", function(){
+      var clone = document.documentElement.cloneNode(true);
+      clone.querySelectorAll("[contenteditable]").forEach(function(el){
+        el.removeAttribute("contenteditable");
+        el.removeAttribute("spellcheck");
+      });
+      clone.querySelectorAll(".mod-edit").forEach(function(el){ el.classList.remove("mod-edit"); });
+      clone.querySelectorAll(".mod-img").forEach(function(el){ el.classList.remove("mod-img"); });
+      var clonedBody = clone.querySelector("body");
+      if (clonedBody) clonedBody.classList.remove("mod-on");
+      var bar = clone.querySelector("#modBar");
+      if (bar) { bar.hidden = true; bar.setAttribute("hidden", ""); }
+      var status = clone.querySelector("#modStatus");
+      if (status) status.textContent = "";
+      var html = "<!DOCTYPE html>\n" + clone.outerHTML;
+      var blob = new Blob([html], { type: "text/html;charset=utf-8" });
+      var url = URL.createObjectURL(blob);
+      var link = document.createElement("a");
+      link.href = url;
+      link.download = "index.html";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 3000);
+      modStatus("Файл index.html скачан. Загрузите его в репозиторий вместо старого.");
+    });
+  }
+
+  if ($("#modExit")) {
+    $("#modExit").addEventListener("click", function(){
+      modSet(false);
+      modStatus("");
+    });
+  }
+
+  if ($("#addTeacher")) {
+    $("#addTeacher").addEventListener("click", function(){
+      var grid = $("#teachersGrid");
+      if (!grid) return;
+      var card = document.createElement("div");
+      card.className = "teacher";
+      card.innerHTML = '<button class="mod-del" type="button" aria-label="Удалить карточку педагога">×</button>' +
+        '<div class="avatar" aria-hidden="true">—</div>' +
+        '<div><h3>Имя Фамилия</h3><p>Предмет и классы. Расскажите о педагоге.</p></div>';
+      grid.appendChild(card);
+      modSet(true);
+      var name = card.querySelector("h3");
+      if (name) name.focus();
+      modStatus("Карточка добавлена. Впишите имя и предмет, затем сохраните или скачайте HTML.");
+    });
+  }
+
+  document.addEventListener("click", function(e){
+    if (!document.body.classList.contains("mod-on")) return;
+    var target = e.target;
+    if (!target || !target.closest) return;
+    if (target.closest("#modBar, .lightbox, #gradeMenu")) return;
+
+    if (target.closest(".mod-del")) return;
+    if (target.closest("#addNews, #addTeacher, #demoDiaryBtn, #prevWeek, #nextWeek, #closeDiary, #modEnter, #downloadLogo, #quizReset, #loadApplications, .mod-del")) return;
+
+    var img = target.closest("img");
+    if (img) {
+      e.preventDefault();
+      e.stopPropagation();
+      modPickImage(img);
+      return;
+    }
+
+    if (target.closest(".shot")) {
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+
+    var link = target.closest("a");
+    if (link) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (e.ctrlKey || e.metaKey) modEditHref(link);
+      else {
+        var edit = link.closest(".mod-edit");
+        if (edit) edit.focus();
+      }
+      return;
+    }
+
+    if (target.closest("button")) {
+      e.preventDefault();
+      e.stopPropagation();
+      var btn = target.closest(".mod-edit");
+      if (btn) btn.focus();
+    }
+  }, true);
+
+  document.addEventListener("click", function(e){
+    var target = e.target;
+    if (!target || !target.closest) return;
+    var btn = target.closest(".mod-del");
+    if (!btn || !document.body.classList.contains("mod-on")) return;
+    var card = btn.closest(".teacher");
+    if (card) {
+      card.remove();
+      modSet(true);
+      modStatus("Карточка удалена. Сохраните изменения или скачайте HTML.");
+    }
+  });
+
+  modApplySaved();
+
+  /* ---------- оценки в дневнике ---------- */
+  var gradeMenu = $("#gradeMenu");
+  var gradeCell = null;
+
+  if (gradeMenu) {
+    document.addEventListener("click", function(e){
+      if (!document.body.classList.contains("mod-on")) return;
+      var td = e.target.closest && e.target.closest("#diaryBody td");
+      if (!td || !td.querySelector(".diary-subject")) return;
+      e.preventDefault();
+      e.stopPropagation();
+      gradeCell = td;
+      var rect = td.getBoundingClientRect();
+      gradeMenu.hidden = false;
+      gradeMenu.style.left = Math.max(8, Math.min(window.innerWidth - 190, rect.left + window.scrollX)) + "px";
+      gradeMenu.style.top = (rect.bottom + window.scrollY + 6) + "px";
+    }, true);
+
+    gradeMenu.addEventListener("click", function(e){
+      var btn = e.target.closest("button[data-grade]");
+      if (!btn || !gradeCell) return;
+      e.preventDefault();
+      var key = gradeCell.getAttribute("data-grade-key");
+      var value = parseInt(btn.getAttribute("data-grade"), 10);
+      if (key) {
+        if (value) gradeOverrides[key] = value;
+        else delete gradeOverrides[key];
+        var ok = store.set(GRADE_KEY, gradeOverrides);
+        renderDiary();
+        var message = value ? "Оценка " + value + " выставлена." : "Оценка убрана.";
+        modStatus(message + " Сохраняю…");
+        cloudSave("grades", gradeOverrides).then(function(cloudOk){
+          modStatus(cloudOk
+            ? message + " Видна всем."
+            : (ok ? message + " Сохранено только в браузере." : "Браузер запретил сохранить оценку."));
+        });
+      }
+      gradeMenu.hidden = true;
+      gradeCell = null;
+    });
+
+    document.addEventListener("click", function(e){
+      if (gradeMenu.hidden) return;
+      if (e.target.closest("#gradeMenu") || e.target.closest("#diaryBody td")) return;
+      gradeMenu.hidden = true;
+      gradeCell = null;
+    });
+
+    document.addEventListener("keydown", function(e){
+      if (e.key === "Escape") {
+        gradeMenu.hidden = true;
+        gradeCell = null;
+      }
+    });
+  }
+
+  /* ---------- новости ---------- */
+  var newsList = $("#newsList");
+  var newsEmpty = $("#newsEmpty");
+
+  function updateNewsEmpty(){
+    if (!newsList || !newsEmpty) return;
+    newsEmpty.hidden = newsList.children.length > 0;
+  }
+
+  if ($("#addNews")) {
+    $("#addNews").addEventListener("click", function(){
+      if (!newsList) return;
+      var months = ["янв", "фев", "мар", "апр", "мая", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"];
+      var now = new Date();
+      var item = document.createElement("li");
+      item.innerHTML = '<time datetime="' + now.toISOString().slice(0, 10) + '">' +
+        now.getDate() + " " + months[now.getMonth()] + " " + now.getFullYear() + "</time>" +
+        '<div><h3>Заголовок новости</h3><p>Текст новости.</p></div>';
+      newsList.insertBefore(item, newsList.firstChild);
+      modSet(true);
+      updateNewsEmpty();
+      var title = item.querySelector("h3");
+      if (title) title.focus();
+      modStatus("Новость добавлена. Отредактируйте заголовок и текст, затем сохраните или скачайте HTML.");
+    });
+  }
+
+  updateNewsEmpty();
+
+  /* ---------- загрузка общих данных из базы ---------- */
+  function loadCloudContent(){
+    return sbFetch("/rest/v1/content?select=key,value")
+      .then(function(response){
+        if (!response.ok) throw new Error("cloud " + response.status);
+        return response.json();
+      })
+      .then(function(rows){
+        (rows || []).forEach(function(row){
+          if (row.key === "grades" && row.value && typeof row.value === "object") {
+            gradeOverrides = row.value;
+            store.set(GRADE_KEY, gradeOverrides);
+            if (diaryState.student && diaryBox && !diaryBox.hidden) renderDiary();
+          }
+          if (row.key === "news_html" && row.value && typeof row.value.html === "string") {
+            var list = $("#newsList");
+            if (list) {
+              list.innerHTML = modCleanHtml(row.value.html);
+              updateNewsEmpty();
+            }
+          }
+        });
+      })
+      .catch(function(){
+        /* без базы работаем на локальных данных */
+      });
+  }
+
+  loadCloudContent();
+
+  /* ---------- заявки в учительской ---------- */
+  function renderApplications(rows){
+    var box = $("#applicationsList");
+    if (!box) return;
+    box.innerHTML = "";
+    (rows || []).forEach(function(row){
+      var item = document.createElement("li");
+      var info = document.createElement("div");
+      var name = document.createElement("b");
+      name.textContent = row.name + " — " + row.klass;
+      var details = document.createElement("small");
+      details.textContent = [row.parent, row.phone, row.email, row.comment].filter(Boolean).join(" · ");
+      info.appendChild(name);
+      info.appendChild(details);
+      var remove = document.createElement("button");
+      remove.type = "button";
+      remove.className = "linklike";
+      remove.textContent = "удалить";
+      remove.addEventListener("click", function(){ deleteApplication(row.id); });
+      item.appendChild(info);
+      item.appendChild(remove);
+      box.appendChild(item);
+    });
+  }
+
+  function deleteApplication(id){
+    var status = $("#applicationsStatus");
+    if (status) status.textContent = "Удаляю…";
+    sbFetch("/rest/v1/rpc/school67_delete_application", {
+      method: "POST",
+      body: JSON.stringify({ p_code: MOD_CODE, p_id: id })
+    })
+      .then(function(response){
+        if (!response.ok) throw new Error("http " + response.status);
+        if (status) status.textContent = "Заявка удалена.";
+        loadApplications();
+      })
+      .catch(function(){
+        if (status) status.textContent = "Не удалось удалить заявку.";
+      });
+  }
+
+  function loadApplications(){
+    var status = $("#applicationsStatus");
+    if (!document.body.classList.contains("mod-on")) {
+      if (status) status.textContent = "Сначала войдите в режим модерации.";
+      return;
+    }
+    if (status) status.textContent = "Загружаю…";
+    sbFetch("/rest/v1/rpc/school67_applications", {
+      method: "POST",
+      body: JSON.stringify({ p_code: MOD_CODE })
+    })
+      .then(function(response){
+        if (!response.ok) throw new Error("http " + response.status);
+        return response.json();
+      })
+      .then(function(rows){
+        renderApplications(rows);
+        if (status) status.textContent = rows.length ? "Заявок: " + rows.length : "Заявок пока нет.";
+      })
+      .catch(function(){
+        if (status) status.textContent = "Не удалось загрузить: выполнен ли SQL из supabase-rpc.sql?";
+      });
+  }
+
+  if ($("#loadApplications")) {
+    $("#loadApplications").addEventListener("click", loadApplications);
+  }
 
   /* ---------- скачивание логотипа ---------- */
   $("#downloadLogo").addEventListener("click", function(){
